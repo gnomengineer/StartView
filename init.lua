@@ -5,7 +5,13 @@ local wibox = require("wibox")
 local naughty = require("naughty")
 local gears = require("gears")
 
-
+local surface = cairo.ImageSurface(cairo.Format.RGB24,20,20)
+local cr = cairo.Context(surface)
+--
+local source = string.sub(debug.getinfo(1,'S').source, 2)
+local path = string.sub(source, 1, string.find(source, "/[^/]*$"))
+local noicon = path .. "testIcon.png"
+--]]
 local startview_box = wibox({ 
     width =  screen[mouse.screen].geometry.width, 
     height = screen[mouse.screen].geometry.height
@@ -19,18 +25,12 @@ local settings = {
     starter_font_color = "#ffffff"
 }
 
+local starter_widgets = {}
 local starterList = {{"test","testIcon"}}
 startview_box.opacity = settings.box_opacity
 startview_box.bg = settings.box_bg 
 startview_box.ontop = true
 startview_box.visible = false
-local widget_container = wibox.widget {
-    forced_num_cols = 5,
-    horizontal_homogeneous = true,
-    spacing = 5,
-    expand = false,
-    layout = wibox.layout.grid
-}
 
 local function debug(val) 
     naughty.notify({
@@ -39,27 +39,47 @@ local function debug(val)
 end
 
 local function toggle_startview() 
+    for i = 1, #starter_widgets do
+        starter_widgets[i].draw(starter_widget, startview_box, cr, 200,200)
+    end
     startview_box.visible = not startview_box.visible
 end
 
 local function setup()
 
-    surface = cairo.ImageSurface(cairo.Format.RGB24,100,100)
-    cr = cairo.Context(surface)
-    for i = 1, 3 do
-        --cr:set_source_surface(gears.surface.load("~/pictures/VennPurpose.VennPurpose.jpg"),0,0)
-        --cr:show_text("test")
-        cr:set_source(gears.color("#ffffff"))
-        cr:move_to(2,2)
-        cr:show_text("test")
-        cr:stroke()
-        --cr:paint()
-            
-        starter_widget = wibox.widget.imagebox(surface,false)
-        --starter_widget.forced_height =100
-        --starter_widget.forced_width = 100
-        -- add widget to the main container
-        widget_container:add(starter_widget)
+    --cr:set_source(gears.color("#ffffff"))
+    for i = 1, 15 do
+
+        starter_widgets[i] = wibox.widget.base.make_widget()
+
+        starter_widgets[i].fit = function(starter_widget, width, height)
+            return 0, 0
+        end
+
+        starter_widgets[i].draw = function(starter_widget, startview_box, cr, width, height) 
+            icon = gears.surface(gears.surface.load(noicon))
+            cr:set_source_surface(icon,0,0)
+            cr:paint()
+            --]]
+            cr:scale(10,10)
+            cr:set_source_rgba(unpack(settings.starter_font_color))
+            cr:move_to(2,2)
+            cr:show_text("test")
+            cr:stroke() 
+        end
+           
+    end
+
+    local widget_container = wibox.widget {
+        forced_num_cols = 5,
+        horizontal_homogeneous = true,
+        spacing = 20,
+        expand = false,
+        layout = wibox.layout.grid
+    }
+
+    for i = 1, 15 do
+        widget_container:add(starter_widgets[i])
     end
 
     startview_box:set_widget(widget_container)
