@@ -11,81 +11,79 @@ local cr = cairo.Context(surface)
 local source = string.sub(debug.getinfo(1,'S').source, 2)
 local path = string.sub(source, 1, string.find(source, "/[^/]*$"))
 local noicon = path .. "testIcon.png"
+local margin = 20
 --]]
-local startview_box = wibox({ 
-    width =  screen[mouse.screen].geometry.width, 
-    height = screen[mouse.screen].geometry.height
-})
-
 local settings = {
     box_opacity = 0.6,
-    box_bg = "#ff0000",
+    box_bg = "#444444",
     starter_font = {"sans","italic","normal"},
     starter_font_size = 0.8,
     starter_font_color = "#ffffff"
 }
 
-local starter_widgets = {}
-local starterList = {{"test","testIcon"}}
-startview_box.opacity = settings.box_opacity
-startview_box.bg = settings.box_bg 
-startview_box.ontop = true
-startview_box.visible = false
-
-local function debug(val) 
+local function printDebugInfo(val)
     naughty.notify({
         text= val .. ""
     })
 end
 
-local function toggle_startview() 
-    for i = 1, #starter_widgets do
-        starter_widgets[i].draw(starter_widget, startview_box, cr, 200,200)
-    end
-    startview_box.visible = not startview_box.visible
+local startview_box = wibox({
+    width =  screen[mouse.screen].geometry.width - 2*margin,
+    height = screen[mouse.screen].geometry.height - 2*margin,
+    x = margin,
+    y = margin,
+    opacity = settings.box_opacity,
+    shape = gears.shape.rounded_rect,
+    bg = settings.box_bg,
+    ontop = true,
+    visible = false
+})
+
+local starter_widgets = {}
+local starterList = {{"test","testIcon"}}
+local layout = wibox.layout.fixed.horizontal()
+
+for counter=0,15 do
+    starter_widget = wibox({
+        width = startview_box.width / 4 - 1.25 * margin,
+        height = startview_box.height / 4 - 1.25 * margin,
+        bg = "#ff00ff",
+        shape = gears.shape.rounded_rect,
+        ontop = true,
+        visible = false
+    })
+    local text = wibox.widget.textbox()
+    text:set_text("Test")
+    local image = wibox.widget.imagebox()
+    image:set_image("test.png")
+    local layout_starter_widget = wibox.layout.fixed.vertical()
+    layout_starter_widget:add(text)
+    layout_starter_widget:add(image)
+    starter_widget:set_widget(layout_starter_widget)
+    starter_widgets[counter] = starter_widget
 end
 
-local function setup()
+local ycounter = 0
+local xcounter = 1
 
-    --cr:set_source(gears.color("#ffffff"))
-    for i = 1, 15 do
-
-        starter_widgets[i] = wibox.widget.base.make_widget()
-
-        starter_widgets[i].fit = function(starter_widget, width, height)
-            return 0, 0
-        end
-
-        starter_widgets[i].draw = function(starter_widget, startview_box, cr, width, height) 
-            icon = gears.surface(gears.surface.load(noicon))
-            cr:set_source_surface(icon,0,0)
-            cr:paint()
-            --]]
-            cr:scale(10,10)
-            cr:set_source_rgba(unpack(settings.starter_font_color))
-            cr:move_to(2,2)
-            cr:show_text("test")
-            cr:stroke() 
-        end
-           
+for counter=0, #starter_widgets do
+    if counter % 4 == 0 then
+        ycounter = ycounter + 1
+        xcounter = 1
     end
 
-    local widget_container = wibox.widget {
-        forced_num_cols = 5,
-        horizontal_homogeneous = true,
-        spacing = 20,
-        expand = false,
-        layout = wibox.layout.grid
-    }
+    starter_widgets[counter].x = xcounter * margin + (xcounter - 1) * starter_widgets[counter].width + margin
+    starter_widgets[counter].y = ycounter * margin + (ycounter - 1) * starter_widgets[counter].height + margin
+    xcounter = xcounter + 1
+end
 
-    for i = 1, 15 do
-        widget_container:add(starter_widgets[i])
+local function toggle_startview()
+    startview_box.visible = not startview_box.visible
+    for counter = 0, #starter_widgets do
+        starter_widgets[counter].visible = not starter_widgets[counter].visible
     end
-
-    startview_box:set_widget(widget_container)
 end
 
 return {
-    toggle_startview = toggle_startview,
-    setup = setup
+    toggle_startview = toggle_startview
 }
