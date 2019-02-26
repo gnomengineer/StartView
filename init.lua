@@ -34,10 +34,12 @@ end
 
 
 local starter_widgets = {}
-local starterList = {{"test","testIcon"}}
+local starterList = {
+    {"evince","evinceIcon"}
+}
 local layout = wibox.layout.fixed.horizontal()
 
-for counter=0,14 do
+for index=1,#starterList do
     starter_widget = wibox({
         width = starter_width,
         height = starter_height,
@@ -47,13 +49,13 @@ for counter=0,14 do
         visible = false
     })
     local text = wibox.widget.textbox()
-    text:set_text("Test")
+    text:set_text(starterList[index][1])
     text:set_valign("bottom")
     text:set_align("center")
     text:set_font("sans 14")
 
     local image = wibox.widget.imagebox()
-    image:set_image(image_path .. "test.png")
+    image:set_image(image_path .. starterList[index][2])
     image:set_forced_height(150)
     image:set_forced_width(150)
     local container = wibox.container.margin(image, 10, 10)
@@ -66,12 +68,12 @@ for counter=0,14 do
     starter_widget:buttons(
         awful.button({}, 1,
             function()
-                awful.spawn("evince")
+                awful.spawn(starterList[index][1])
             end
         )
     )
 
-    starter_widgets[counter] = starter_widget
+    starter_widgets[index] = starter_widget
 end
 
 local count,rest = math.modf(#starter_widgets / 5)
