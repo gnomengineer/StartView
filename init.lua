@@ -100,21 +100,21 @@ local startview_box = wibox({
 local ycounter = 0
 local xcounter = 1
 
-for counter=0, #starter_widgets do
-    if counter % 5 == 0 then
+for index=1, #starter_widgets do
+    if (index-1) % 5 == 0 then
         ycounter = ycounter + 1
         xcounter = 1
     end
 
-    starter_widgets[counter].x = xcounter * (5 * margin) + (xcounter - 1) * starter_width + startview_box.x
-    starter_widgets[counter].y = ycounter * (2 * margin) + (ycounter - 1) * starter_height + startview_box.y
+    starter_widgets[index].x = xcounter * (5 * margin) + (xcounter - 1) * starter_width + startview_box.x
+    starter_widgets[index].y = ycounter * (2 * margin) + (ycounter - 1) * starter_height + startview_box.y
     xcounter = xcounter + 1
 end
     
 local function toggle_startview()
     startview_box.visible = not startview_box.visible
-    for counter = 0, #starter_widgets do
-        starter_widgets[counter].visible = not starter_widgets[counter].visible
+    for index = 1, #starter_widgets do
+        starter_widgets[index].visible = not starter_widgets[index].visible
     end
 end
 
