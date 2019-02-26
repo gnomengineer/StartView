@@ -1,4 +1,5 @@
 local cairo = require("lgi").cairo
+local awful = require("awful")
 local mouse = mouse
 local screen = screen
 local wibox = require("wibox")
@@ -61,6 +62,15 @@ for counter=0,14 do
     layout_starter_widget:add(container)
     layout_starter_widget:add(text)
     starter_widget:set_widget(layout_starter_widget)
+
+    starter_widget:buttons(
+        awful.button({}, 1,
+            function()
+                awful.spawn("evince")
+            end
+        )
+    )
+
     starter_widgets[counter] = starter_widget
 end
 
