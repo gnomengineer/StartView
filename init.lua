@@ -35,7 +35,7 @@ end
 
 local starter_widgets = {}
 local starterList = {
-    {"evince","evinceIcon"}
+    {"evince","/usr/share/icons/hicolor/256x256/apps/evince.png"}
 }
 local layout = wibox.layout.fixed.horizontal()
 
@@ -43,7 +43,8 @@ for index=1,#starterList do
     starter_widget = wibox({
         width = starter_width,
         height = starter_height,
-        bg = "#ff00ff",
+        bg = "#444444",
+        opacity = 0.8,
         shape = gears.shape.rounded_rect,
         ontop = true,
         visible = false
@@ -55,7 +56,7 @@ for index=1,#starterList do
     text:set_font("sans 14")
 
     local image = wibox.widget.imagebox()
-    image:set_image(image_path .. starterList[index][2])
+    image:set_image(starterList[index][2])
     image:set_forced_height(150)
     image:set_forced_width(150)
     local container = wibox.container.margin(image, 10, 10)
