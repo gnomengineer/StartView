@@ -35,7 +35,11 @@ end
 
 local starter_widgets = {}
 local starterList = {
-    {"evince","/usr/share/icons/hicolor/256x256/apps/evince.png"}
+    {"qtcreator","/usr/share/icons/Mint-X/apps/96/qtcreator.svg"},
+    {"firefox","/usr/share/icons/Mint-X/apps/96/firefox-original.svg"},
+    {"hexchat","/usr/share/icons/hicolor/scalable/apps/hexchat.svg"},
+    {"gimp","/usr/share/icons/Mint-X/apps/96/gimp.svg"},
+    {"inkscape","/usr/share/icons/breeze-dark/apps/48/inkscape.svg"}
 }
 local layout = wibox.layout.fixed.horizontal()
 
