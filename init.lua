@@ -35,15 +35,14 @@ end
 
 local starter_widgets = {}
 local starterList = {
-    {"poweroff", "/opt/icons/poweroff.png"},
-    {"qtcreator","/usr/share/icons/hicolor/512x512/apps/QtProject-qtcreator.png"},
+    {"qtcreator","/opt/icons/qtcreator.png"},
     {"firefox","/usr/lib/firefox/browser/chrome/icons/default/default128.png"},
     {"hexchat","/usr/share/icons/hicolor/scalable/apps/hexchat.svg"},
     {"gimp","/usr/share/gimp/2.0/images/wilber.png"},
-    {"inkscape","/usr/share/inkscape/icons/hicolor/scalable/apps/org.inkscape.Inkscape.svg"},
-    {"discord","/opt/icons/discord.png"},
+    {"inkscape", "/usr/share/inkscape/icons/inkscape.svg"},
     {"texstudio","/usr/share/icons/hicolor/scalable/apps/texstudio.svg"},
     {"pavucontrol", "/opt/icons/pavucontrol.svg"},
+    {"discord","/opt/icons/discord.png"},
     {"steam", "/usr/share/icons/hicolor/256x256/apps/steam.png"},
     {"remmina", "/usr/share/icons/hicolor/apps/remmina-symbolic.svg"},
     {"teams", "/opt/icons/teams.png"},
@@ -108,26 +107,32 @@ local startview_box = wibox({
     visible = false
 })
 
+local function calculate_widget_coordinates()
+    local ycounter = 0
+    local xcounter = 1
 
-local ycounter = 0
-local xcounter = 1
+    for index=1, #starter_widgets do
+        if (index-1) % 5 == 0 then
+            ycounter = ycounter + 1
+            xcounter = 1
+        end
 
-for index=1, #starter_widgets do
-    if (index-1) % 5 == 0 then
-        ycounter = ycounter + 1
-        xcounter = 1
+        starter_widgets[index].x = xcounter * (5 * margin) + (xcounter - 1) * starter_width + startview_box.x
+        starter_widgets[index].y = ycounter * (2 * margin) + (ycounter - 1) * starter_height + startview_box.y
+        xcounter = xcounter + 1
     end
-
-    starter_widgets[index].x = xcounter * (5 * margin) + (xcounter - 1) * starter_width + startview_box.x
-    starter_widgets[index].y = ycounter * (2 * margin) + (ycounter - 1) * starter_height + startview_box.y
-    xcounter = xcounter + 1
 end
     
 local function toggle_startview()
+    current_screen = awful.screen.focused()
+
     startview_box.visible = not startview_box.visible
     for index = 1, #starter_widgets do
         starter_widgets[index].visible = not starter_widgets[index].visible
     end
+    startview_box.y = current_screen.geometry.y + (current_screen.geometry.height - startview_box_height) / 2
+    startview_box.x = current_screen.geometry.x + (current_screen.geometry.width - startview_box_width) / 2
+    calculate_widget_coordinates()
 end
 
 return {
