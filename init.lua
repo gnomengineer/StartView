@@ -40,8 +40,8 @@ local starterList = {
     {"texstudio","/usr/share/icons/hicolor/scalable/apps/texstudio.svg"},
     {"discord","/opt/icons/discord.png"},
     {"steam", "/usr/share/icons/hicolor/256x256/apps/steam.png"},
-    {"slack", "/opt/icons/slack.png"},
-    {"nautilus", "/usr/share/icons/Yaru-olive/256x256@2x/apps"}
+    {"slack", "/opt/icons/slack.svg"},
+    {"nautilus", "/usr/share/icons/Yaru-olive/256x256@2x/apps/nautilus.png"}
 }
 local layout = wibox.layout.fixed.horizontal()
 
