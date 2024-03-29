@@ -82,13 +82,16 @@ for index=1,#starterList do
     starter_widgets[index] = starter_widget
 end
 
-local count,rest = math.modf(#starter_widgets / 5)
+local columns = 4
+local rows = 2
+
+local count,rest = math.modf(#starter_widgets / columns )
 if rest > 0 then
     rest = 1
 end
 
-local startview_box_width =  (5*margin + starter_width) * 5 + 5*margin
-local startview_box_height = (2*margin + starter_height) * (count + rest) + 2*margin
+local startview_box_width =  (columns * margin + starter_width) * columns + columns * margin
+local startview_box_height = (rows * margin + starter_height) * (count + rest) + rows *margin
 
 local startview_box = wibox({
     width = startview_box_width,
@@ -107,13 +110,13 @@ local function calculate_widget_coordinates()
     local xcounter = 1
 
     for index=1, #starter_widgets do
-        if (index-1) % 5 == 0 then
+        if (index-1) % columns == 0 then
             ycounter = ycounter + 1
             xcounter = 1
         end
 
-        starter_widgets[index].x = xcounter * (5 * margin) + (xcounter - 1) * starter_width + startview_box.x
-        starter_widgets[index].y = ycounter * (2 * margin) + (ycounter - 1) * starter_height + startview_box.y
+        starter_widgets[index].x = xcounter * (columns * margin) + (xcounter - 1) * starter_width + startview_box.x
+        starter_widgets[index].y = ycounter * (rows * margin) + (ycounter - 1) * starter_height + startview_box.y
         xcounter = xcounter + 1
     end
 end
